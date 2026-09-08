@@ -45,8 +45,9 @@ public static class LabSceneBuilder
         CreateStaticPlatform("Wall_Right", squareSprite, new Vector3(8.5f, 0f, 0f),
             new Vector3(1f, 10f, 1f), new Color(0.4f, 0.4f, 0.45f), groundLayer);
 
-        // Plataforma flotante
-        CreateStaticPlatform("Platform_1", squareSprite, new Vector3(3.5f, -1.2f, 0f),
+        // Plataforma flotante (altura calculada para quedar dentro del alcance del salto:
+        // con Gravity Scale 4.5 y Jump Force 14 la altura máxima de salto es ~2.2 unidades)
+        CreateStaticPlatform("Platform_1", squareSprite, new Vector3(3.5f, -2.2f, 0f),
             new Vector3(3f, 0.5f, 1f), new Color(0.45f, 0.35f, 0.25f), groundLayer);
 
         // Jugador
@@ -56,7 +57,7 @@ public static class LabSceneBuilder
         CreatePushableBox(squareSprite, new Vector3(-1f, -3.3f, 0f));
 
         // Moneda coleccionable (Collider2D trigger)
-        CreateCoin(circleSprite, new Vector3(3.5f, 0f, 0f));
+        CreateCoin(circleSprite, new Vector3(3.5f, 0.1f, 0f));
 
         Directory.CreateDirectory(ScenesFolder);
         string scenePath = $"{ScenesFolder}/{SceneName}.unity";
