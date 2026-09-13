@@ -18,13 +18,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
 
     private Rigidbody2D rb;
+    private SpriteRenderer spriteRenderer;
     private float horizontalInput;
     private bool isGrounded;
+    private bool facingRight = true;
     private float baseGravityScale;
+
+    // Expuesto para PlayerAnimator y otros sistemas (UI, cámara, etc.) sin acoplar lógica extra aquí.
+    public bool IsGrounded => isGrounded;
+    public float HorizontalInput => horizontalInput;
+    public Rigidbody2D Rigidbody => rb;
+    public bool FacingRight => facingRight;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         baseGravityScale = rb.gravityScale;
     }
 
@@ -39,9 +48,27 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            AudioManager.Instance?.PlaySfxJump();
         }
 
         ApplyVariableJumpGravity();
+        UpdateFacing();
+    }
+
+    // Cambio de orientación del personaje: voltea el sprite (no el collider) según hacia dónde se mueve.
+    private void UpdateFacing()
+    {
+        if (horizontalInput > 0f && !facingRight) Flip();
+        else if (horizontalInput < 0f && facingRight) Flip();
+    }
+
+    private void Flip()
+    {
+        facingRight = !facingRight;
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.flipX = !facingRight;
+        }
     }
 
     private void FixedUpdate()
